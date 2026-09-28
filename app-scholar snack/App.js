@@ -1,766 +1,948 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-  ScrollView,
-} from 'react-native';
 
+import {StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Alert, ScrollView} from 'react-native';
+
+
+// ======================================================
+// ENDEREÇO DA API
+// ======================================================
+//
+// Android Emulator:
+// http://10.0.2.2:3000
+//
+// Celular físico:
+// trocar pelo IP do computador
+// http://192.168.1.10:3000
+//
+// ======================================================
+
+const API_URL = 'http://10.0.2.2:3000';
+
+
+// Tela inicial da aplicação
 export default function App() {
+
   const [telaAtual, setTelaAtual] = useState('Home');
 
-  if (telaAtual == 'Home') {
-    return (
-      <View style={styles.containerHome}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Home</Text>
 
-          <TouchableOpacity style={styles.btnTracinhos}>
-            <Image
-              source={require('./assets/tracinhos.png')}
-              style={styles.tracinhos}
-            />
-          </TouchableOpacity>
-        </View>
+  // ======================================================
+  // CAMPOS DO CADASTRO DE ALUNO
+  // ======================================================
 
-        <Image source={require('./assets/bg.png')} style={styles.bg} />
-
-        <Image source={require('./assets/icon.png')} style={styles.logo} />
-
-        <Text style={styles.titulo}>APP Scholar</Text>
-        <Text style={styles.subtitulo}>Sistema acadêmico</Text>
-
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Alunos')}>
-            <Text style={styles.text}>Alunos</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Responsáveis')}>
-            <Text style={styles.text}>Responsáveis</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Professores')}>
-            <Text style={styles.text}>Professores</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Coordenadores')}>
-            <Text style={styles.text}>Coordenadores</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Avaliações')}>
-            <Text style={styles.text}>Avaliações</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Boletins')}>
-            <Text style={styles.text}>Boletins</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Disciplinas')}>
-            <Text style={styles.text}>Disciplinas</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Cursos')}>
-            <Text style={styles.text}>Cursos</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Turmas')}>
-            <Text style={styles.text}>Turmas</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bdBtn}
-            onPress={() => setTelaAtual('Matrículas')}>
-            <Text style={styles.text}>Matrículas</Text>
-          </TouchableOpacity>
-        </View>
-
-        <BottomBar setTelaAtual={setTelaAtual} />
-      </View>
-    );
-  }
-
-  if (telaAtual == 'Alunos') {
-    return (
-      <TelaInterna
-        titulo="Alunos"
-        descricao="Gerenciar alunos"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-        tela1="CadastrarAluno"
-      />
-    );
-  }
-  if (telaAtual == 'CadastrarAluno') {
-    return (
-      <CadastrarAluno
-        setTelaAtual={setTelaAtual}
-        descricao="Dados do aluno"
-        titulo="Aluno"
-      />
-    );
-  }
-  if (telaAtual == 'Responsáveis') {
-    return (
-      <TelaInterna
-        titulo="Responsáveis"
-        descricao="Gerenciar responsáveis"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Professores') {
-    return (
-      <TelaInterna
-        titulo="Professores"
-        descricao="Gerenciar professores"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Coordenadores') {
-    return (
-      <TelaInterna
-        titulo="Coordenadores"
-        descricao="Gerenciar coordenadores"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Avaliações') {
-    return (
-      <TelaInterna
-        titulo="Avaliações"
-        descricao="Gerenciar avaliações"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Boletins') {
-    return (
-      <TelaInterna
-        titulo="Boletins"
-        descricao="Gerenciar boletins"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Disciplinas') {
-    return (
-      <TelaInterna
-        titulo="Disciplinas"
-        descricao="Gerenciar disciplinas"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Cursos') {
-    return (
-      <TelaInterna
-        titulo="Cursos"
-        descricao="Gerenciar cursos"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Turmas') {
-    return (
-      <TelaInterna
-        titulo="Turmas"
-        descricao="Gerenciar turmas"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Matrículas') {
-    return (
-      <TelaInterna
-        titulo="Matrículas"
-        descricao="Gerenciar matrículas"
-        setTelaAtual={setTelaAtual}
-        t1="Cadastrar"
-        t2="Consultar"
-        t3="Editar"
-      />
-    );
-  }
-
-  if (telaAtual == 'Sobre') {
-    return (
-      <View style={styles.containerSobre}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Sobre</Text>
-        </View>
-
-        <View style={styles.containerSobreMain}>
-          <Text style={styles.tituloInterno}>APP Scholar</Text>
-
-          <Text style={styles.descricaoInterna}>
-            Sistema acadêmico para gerenciamento de alunos, professores, cursos,
-            turmas e informações escolares.
-          </Text>
-        </View>
-
-        <BottomBar setTelaAtual={setTelaAtual} />
-      </View>
-    );
-  }
-}
-
-function TelaInterna({
-  titulo,
-  descricao,
-  t1,
-  t2,
-  t3,
-  tela1,
-  tela2,
-  tela3,
-  setTelaAtual,
-}) {
-  return (
-    <View style={styles.containerSobre}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.btnVoltar}
-          onPress={() => setTelaAtual('Home')}>
-          <Image
-            style={styles.backButton}
-            source={require('./assets/back.png')}
-          />
-        </TouchableOpacity>
-
-        <Text style={styles.headerText}>{titulo}</Text>
-      </View>
-
-      <View style={styles.containerSobreMain}>
-        <Text style={styles.tituloInterno}>{descricao}</Text>
-
-        <View style={styles.abasContainer}>
-          <TouchableOpacity
-            style={styles.aba}
-            onPress={() => setTelaAtual(tela1)}>
-            <Text style={styles.abaText}>{t1}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.aba}
-            onPress={() => setTelaAtual(tela2)}>
-            <Text style={styles.abaText}>{t2}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.aba}
-            onPress={() => setTelaAtual(tela3)}>
-            <Text style={styles.abaText}>{t3}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <BottomBar setTelaAtual={setTelaAtual} />
-    </View>
-  );
-}
-
-function CadastrarAluno({ descricao, setTelaAtual, titulo }) {
   const [nome, setNome] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
+  const [idRuas, setIdRuas] = useState('');
   const [cpf, setCpf] = useState('');
-  const [responsavel, setResponsavel] = useState('');
-  const [endereco, setEndereco] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const [curso, setCurso] = useState('');
+
+  const [carregando, setCarregando] = useState(false);
+
+
+  // ======================================================
+  // CADASTRAR ALUNO
+  // ======================================================
 
   const cadastrarAluno = async () => {
-    const dados = {
-      nome: nome,
-      data_nascimento: dataNascimento,
-      cpf: cpf,
-      telefone: telefone,
-      email: email,
 
-      responsavel: responsavel,
-      endereco: endereco,
-      curso: curso,
-    };
-
-    try {
-      const resposta = await fetch(
-        'http://192.168.15.8/app_scholar_api/cadastrar_aluno.php',
-        {
-          method: 'POST',
-
-          headers: {
-            'Content-Type': 'application/json',
-          },
-
-          body: JSON.stringify(dados),
-        }
+    // Verifica se os campos foram preenchidos
+    if (
+      !nome ||
+      !dataNascimento ||
+      !idRuas ||
+      !cpf ||
+      !email ||
+      !telefone
+    ) {
+      Alert.alert(
+        'Atenção',
+        'Preencha todos os campos do cadastro.'
       );
 
-      const resultado = await resposta.json();
+      return;
+    }
 
-      console.log(resultado);
 
-      if (resultado.sucesso) {
-        Alert.alert('Sucesso!', 'Aluno cadastrado com sucesso!');
-      } else {
-        Alert.alert('Erro', resultado.erro || resultado.mensagem);
+    try {
+
+      setCarregando(true);
+
+
+      // Envia os dados para a API
+      const resposta = await fetch(`${API_URL}/api/alunos`, {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify({
+          Nome: nome,
+          Data_de_Nascimento: dataNascimento,
+          idRuas: Number(idRuas),
+          CPF: cpf,
+          Email: email,
+          Telefone: telefone,
+        }),
+      });
+
+
+      const dados = await resposta.json();
+
+
+      // Se a API retornar erro
+      if (!resposta.ok) {
+
+        Alert.alert(
+          'Erro',
+          dados.erro || 'Não foi possível cadastrar o aluno.'
+        );
+
+        return;
       }
-    } catch (erro) {
-      console.log('ERRO COMPLETO:', erro);
 
-      Alert.alert('Erro', String(erro));
+
+      // Cadastro realizado
+      Alert.alert(
+        'Sucesso',
+        'Aluno cadastrado com sucesso!'
+      );
+
+
+      // Limpa os campos
+      setNome('');
+      setDataNascimento('');
+      setIdRuas('');
+      setCpf('');
+      setEmail('');
+      setTelefone('');
+
+
+    } catch (erro) {
+
+      console.log('Erro ao conectar com a API:', erro);
+
+      Alert.alert(
+        'Erro de conexão',
+        'Não foi possível conectar com a API. Verifique se o servidor está funcionando.'
+      );
+
+    } finally {
+
+      setCarregando(false);
+
     }
   };
 
-  return (
-    <View style={styles.containerCadastrar}>
-      <View style={styles.header}>
+
+  // ======================================================
+  // TELA HOME
+  // ======================================================
+
+  if (telaAtual === 'Home') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.titulo}>
+          App Scholar
+        </Text>
+
+
         <TouchableOpacity
-          style={styles.btnVoltar}
-          onPress={() => setTelaAtual('Alunos')}>
-          <Image
-            style={styles.backButton}
-            source={require('./assets/back.png')}
-          />
+          style={styles.botao}
+          onPress={() => setTelaAtual('Dados_Academicos')}
+        >
+          <Text style={styles.textoBotao}>
+            Dados Acadêmicos
+          </Text>
         </TouchableOpacity>
 
-        <Text style={styles.headerText}>{titulo}</Text>
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Sobre')}
+        >
+          <Text style={styles.textoBotao}>
+            Sobre
+          </Text>
+        </TouchableOpacity>
+
       </View>
+    );
+  }
 
+
+  // ======================================================
+  // DADOS ACADÊMICOS
+  // ======================================================
+
+  if (telaAtual === 'Dados_Academicos') {
+
+    return (
+      <View style={styles.container}>
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Coordenadores')}
+        >
+          <Text style={styles.textoBotao}>
+            Coordenadores
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Professores')}
+        >
+          <Text style={styles.textoBotao}>
+            Professores
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Responsáveis')}
+        >
+          <Text style={styles.textoBotao}>
+            Responsáveis
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Matrículas')}
+        >
+          <Text style={styles.textoBotao}>
+            Matrículas
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Boletins')}
+        >
+          <Text style={styles.textoBotao}>
+            Boletins
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Turmas')}
+        >
+          <Text style={styles.textoBotao}>
+            Turmas
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Alunos')}
+        >
+          <Text style={styles.textoBotao}>
+            Alunos
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Home')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // SOBRE
+  // ======================================================
+
+  if (telaAtual === 'Sobre') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.titulo}>
+          Para que serve o APP Scholar?
+        </Text>
+
+
+        <Text style={styles.caixa}>
+          O APP Scholar serve para armazenar informações
+          sobre os alunos da escola. Onde podem ser
+          inseridas novas informações relacionadas a
+          professores, notas, coordenadores e entre outros.
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Home')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // COORDENADORES
+  // ======================================================
+
+  if (telaAtual === 'Coordenadores') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.subtitulo2}>
+          Selecione o que deseja atualizar:
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Cadastrar_coordenador')}
+        >
+          <Text style={styles.textoBotao}>
+            Cadastrar coordenador
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Consultar_coordenadores')}
+        >
+          <Text style={styles.textoBotao}>
+            Consultar coordenadores
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Dados_Academicos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // PROFESSORES
+  // ======================================================
+
+  if (telaAtual === 'Professores') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.subtitulo2}>
+          Selecione o que deseja atualizar:
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Cadastrar_professor')}
+        >
+          <Text style={styles.textoBotao}>
+            Cadastrar professor
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Consultar_professores')}
+        >
+          <Text style={styles.textoBotao}>
+            Consultar professores
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Dados_Academicos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // RESPONSÁVEIS
+  // ======================================================
+
+  if (telaAtual === 'Responsáveis') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.subtitulo2}>
+          Selecione o que deseja atualizar:
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Cadastrar_responsavel')}
+        >
+          <Text style={styles.textoBotao}>
+            Cadastrar responsável
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Consultar_responsaveis')}
+        >
+          <Text style={styles.textoBotao}>
+            Consultar responsáveis
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Dados_Academicos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // MATRÍCULAS
+  // ======================================================
+
+  if (telaAtual === 'Matrículas') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.subtitulo2}>
+          Selecione o que deseja atualizar:
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Cadastrar_matricula')}
+        >
+          <Text style={styles.textoBotao}>
+            Cadastrar matrícula
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Consultar_matriculas')}
+        >
+          <Text style={styles.textoBotao}>
+            Consultar matrículas
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Dados_Academicos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // BOLETINS
+  // ======================================================
+
+  if (telaAtual === 'Boletins') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.subtitulo2}>
+          Selecione o que deseja atualizar:
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Cadastrar_boletins')}
+        >
+          <Text style={styles.textoBotao}>
+            Cadastrar boletins
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Consultar_boletins')}
+        >
+          <Text style={styles.textoBotao}>
+            Consultar boletins
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Dados_Academicos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // TURMAS
+  // ======================================================
+
+  if (telaAtual === 'Turmas') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.subtitulo2}>
+          Selecione o que deseja atualizar:
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Cadastrar_Turmas')}
+        >
+          <Text style={styles.textoBotao}>
+            Cadastrar Turmas
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Consultar_Turmas')}
+        >
+          <Text style={styles.textoBotao}>
+            Consultar Turmas
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Dados_Academicos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // ALUNOS
+  // ======================================================
+
+  if (telaAtual === 'Alunos') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.subtitulo2}>
+          Selecione o que deseja atualizar:
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Cadastrar_Alunos')}
+        >
+          <Text style={styles.textoBotao}>
+            Cadastrar Alunos
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Consultar_Alunos')}
+        >
+          <Text style={styles.textoBotao}>
+            Consultar Alunos
+          </Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Dados_Academicos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // CADASTRAR ALUNOS
+  // ======================================================
+
+  if (telaAtual === 'Cadastrar_Alunos') {
+
+    return (
       <ScrollView
-        style={{width: '100%'}}
-        contentContainerStyle={styles.scrollCadastro}
-        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.formularioContainer}
       >
-        <View style={styles.containerCadastrarMain}>
-          <Text style={styles.tituloInterno}>{descricao}</Text>
 
-          <View style={styles.inputsCadastro}>
-            <Text style={styles.label}>Nome Completo</Text>
+        <Text style={styles.titulo}>
+          Cadastrar Aluno
+        </Text>
 
-            <TextInput
-              placeholder="Digite o nome completo"
-              value={nome}
-              onChangeText={setNome}
-              style={styles.textInput}
-            />
 
-            <Text style={styles.label}>Data de nascimento</Text>
+        {/* NOME */}
 
-            <TextInput
-              placeholder="aaaa-mm-dd"
-              value={dataNascimento}
-              onChangeText={setDataNascimento}
-              style={styles.textInput}
-            />
+        <Text style={styles.label}>
+          Nome do aluno
+        </Text>
 
-            <Text style={styles.label}>CPF</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite o nome completo"
+          value={nome}
+          onChangeText={setNome}
+        />
 
-            <TextInput
-              placeholder="00000000000"
-              value={cpf}
-              onChangeText={setCpf}
-              style={styles.textInput}
-            />
 
-            <Text style={styles.label}>Responsável</Text>
+        {/* DATA DE NASCIMENTO */}
 
-            <TextInput
-              placeholder="Nome do(a) responsável"
-              value={responsavel}
-              onChangeText={setResponsavel}
-              style={styles.textInput}
-            />
+        <Text style={styles.label}>
+          Data de nascimento
+        </Text>
 
-            <Text style={styles.label}>Endereço</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="AAAA-MM-DD"
+          value={dataNascimento}
+          onChangeText={setDataNascimento}
+          keyboardType="numbers-and-punctuation"
+        />
 
-            <TextInput
-              placeholder="Digite o endereço do aluno"
-              value={endereco}
-              onChangeText={setEndereco}
-              style={styles.textInput}
-            />
 
-            <Text style={styles.label}>Email</Text>
+        {/* ID DA RUA */}
 
-            <TextInput
-              placeholder="Digite o email do aluno"
-              value={email}
-              onChangeText={setEmail}
-              style={styles.textInput}
-            />
+        <Text style={styles.label}>
+          ID da rua
+        </Text>
 
-            <Text style={styles.label}>Telefone</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite o nome da rua"
+          value={idRuas}
+          onChangeText={setIdRuas}
+          keyboardType="numeric"
+        />
 
-            <TextInput
-              placeholder="(12) 99999-9999"
-              value={telefone}
-              onChangeText={setTelefone}
-              style={styles.textInput}
-            />
 
-            <Text style={styles.label}>Curso</Text>
+        {/* CPF */}
 
-            <TextInput
-              placeholder="Digite o curso"
-              value={curso}
-              onChangeText={setCurso}
-              style={styles.textInput}
-            />
+        <Text style={styles.label}>
+          CPF
+        </Text>
 
-            <TouchableOpacity
-              style={styles.cadastroBTN}
-              onPress={cadastrarAluno}>
-              <Text>Cadastrar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite o CPF"
+          value={cpf}
+          onChangeText={setCpf}
+          keyboardType="numeric"
+        />
+
+
+        {/* EMAIL */}
+
+        <Text style={styles.label}>
+          E-mail
+        </Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Digite o e-mail"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+
+
+        {/* TELEFONE */}
+
+        <Text style={styles.label}>
+          Telefone
+        </Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Digite o telefone"
+          value={telefone}
+          onChangeText={setTelefone}
+          keyboardType="phone-pad"
+        />
+
+
+        {/* BOTÃO CADASTRAR */}
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={cadastrarAluno}
+          disabled={carregando}
+        >
+
+          <Text style={styles.textoBotao}>
+
+            {carregando
+              ? 'Cadastrando...'
+              : 'Cadastrar Aluno'
+            }
+
+          </Text>
+
+        </TouchableOpacity>
+
+
+        {/* BOTÃO VOLTAR */}
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Alunos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
       </ScrollView>
+    );
+  }
 
-      <BottomBar setTelaAtual={setTelaAtual} />
-    </View>
-  );
+
+  // ======================================================
+  // CONSULTAR ALUNOS
+  // ======================================================
+  if (telaAtual === 'Consultar_Alunos') {
+
+    return (
+      <View style={styles.container}>
+
+        <Text style={styles.titulo}>
+          Consultar Alunos
+        </Text>
+
+        <Text style={styles.caixa}>
+          A consulta de alunos ainda será conectada a API.
+        </Text>
+
+
+        <TouchableOpacity
+          style={styles.botao2}
+          onPress={() => setTelaAtual('Alunos')}
+        >
+          <Text style={styles.textoBotao}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+
+  // ======================================================
+  // ESTILIZAÇÃO
+  // ======================================================
+
+  return null;
 }
 
-function BottomBar({ setTelaAtual }) {
-  return (
-    <View style={styles.bottomBar}>
-      <TouchableOpacity
-        style={styles.bottomButton}
-        onPress={() => setTelaAtual('Home')}>
-        <Image
-          style={styles.bottomButtonIMG}
-          source={require('./assets/homeIcon.png')}
-        />
-      </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.bottomButton}
-        onPress={() => setTelaAtual('Sobre')}>
-        <Image
-          style={styles.bottomButtonIMG}
-          source={require('./assets/aboutIcon.png')}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function consultaAluno() {
-  const buscarAlunos = async () => {
-    try {
-      const resposta = await fetch(
-        'http://192.168.15.8/app_scholar_api/alunos.php'
-      );
-      const dados = await resposta.json();
-      setAlunos(dados);
-    } catch (erro) {
-      console.log('Erro:', erro);
-    }
-  };
-}
+// ======================================================
+// ESTILOS
+// ======================================================
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    height: 100,
-    width: '100%',
-    backgroundColor: '#5D7BE8',
-    zIndex: 2,
-  },
 
-  headerText: {
-    color: '#FFFFFF',
-    fontSize: 25,
-    top: 60,
-  },
-
-  tracinhos: {
-    width: 40,
-    height: 40,
-  },
-
-  btnTracinhos: {
-    position: 'absolute',
-    left: '4%',
-    top: 50,
-  },
-
-  containerHome: {
+  container: {
     flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ecf0f1',
+    padding: 20,
   },
 
-  bg: {
-    position: 'absolute',
-    width: '100%',
-    height: 200,
-    top: 100,
+
+  formularioContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ecf0f1',
+    padding: 20,
+    paddingTop: 40,
+    paddingBottom: 40,
   },
+
+
+  caixa: {
+    width: '80%',
+    backgroundColor: '#d3d3d3',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+
 
   logo: {
     width: 150,
-    height: 100,
-    marginTop: 110,
-    marginBottom: 10,
+    height: 150,
+    marginBottom: 20,
   },
+
 
   titulo: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#5D7BE8',
+    textAlign: 'center',
+    color: '#FACE07',
+    marginBottom: 20,
   },
+
 
   subtitulo: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 40,
     color: '#666',
   },
 
-  buttonsContainer: {
-    width: '90%',
-    height: '50%',
 
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-
-    justifyContent: 'space-evenly',
-    alignContent: 'space-evenly',
-  },
-
-  bdBtn: {
-    width: '45%',
-    height: '15%',
-
-    backgroundColor: '#ffffff',
-
-    borderRadius: 10,
-
-    boxShadow: '0 3px 0 0 #D6D6D6',
-
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  text: {
+  subtitulo2: {
     fontSize: 18,
+    marginBottom: 40,
     fontWeight: 'bold',
-    color: '#8F8F8F',
+    textAlign: 'center',
+    color: '#F4C90B',
   },
 
-  containerSobre: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#ecf0f1',
-  },
-
-  containerSobreMain: {
-    flex: 1,
-    width: '90%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 80,
-    marginTop: '30%',
-  },
 
   label: {
-    fontSize: 13,
-    marginBottom: 5,
-    fontFamily: 'sans-serif',
-  },
-  tituloInterno: {
-    fontSize: 23,
-    fontWeight: 'bold',
-    color: '#5D7BE8',
-    marginBottom: 12,
-    marginTop: -12,
-    textAlign: 'center',
-  },
-
-  descricaoInterna: {
-    fontSize: 18,
-    color: '#666',
-    textAlign: 'center',
-    paddingHorizontal: 20,
-  },
-
-  btnVoltar: {
-    position: 'absolute',
-    left: 10,
-    top: 48,
-    zIndex: 3,
-  },
-
-  backButton: {
-    width: 40,
-    height: 40,
-  },
-
-  bottomBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-
-    height: 80,
-
-    backgroundColor: '#ffffff',
-
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-
-    borderTopWidth: 1,
-    borderTopColor: '#dddddd',
-  },
-
-  bottomButtonIMG: {
-    width: 40,
-    height: 40,
-  },
-
-  abasContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
     width: '90%',
-    height: 300,
-  },
-
-  aba: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    boxShadow: '0 3px 0 0 #D6D6D6',
-
-    height: '25%',
-    width: '100%',
-    borderRadius: 10,
-  },
-
-  abaText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
-    color: '#8F8F8F',
+    color: '#463901',
+    marginBottom: 5,
+    marginTop: 8,
   },
 
-  // área do cadastro aluno -------------------------------------------------------------------------
-  inputsCadastro: {
-    width: '100%',
-    justifyContent: 'space-evenly',
-    marginTop: 20,
-  },
 
-  containerCadastrar: {
-    display: 'flex',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-  },
-
-  containerCadastrarMain: {
-    flex: 1,
-    width: '80%',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingBottom: 80,
-    paddingTop: 20,
-  },
-
-  cadastroBTN: {
-    width: '100%',
-    height: '8%',
-
-    backgroundColor: '#5D7BE8',
-    color: '#ffffff',
-    fontSize: 18,
-    fontFamily: 'sans-serif',
+  input: {
+    width: '90%',
+    height: 50,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
     borderRadius: 10,
-    marginTop: 15,
-   
-    boxShadow: '0 3px 0 0 #D6D6D6',
-
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textInput: {
-    backgroundColor: '#ffffff',
-    color: '#8F8F8F',
-    width: '100%',
-    height: 30,
-    boxShadow: '0 3px 0 0 #D6D6D6',
-
-    borderRadius: 7,
+    paddingHorizontal: 15,
+    fontSize: 16,
     marginBottom: 10,
-    padding: '0 0 0 100px',
   },
-  scrollCadastro: {
+
+
+  botao: {
+    width: '80%',
+    backgroundColor: '#FACE07',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
     alignItems: 'center',
-    paddingTop: 120,
-    paddingBottom: 110,
   },
+
+
+  botao2: {
+    width: '80%',
+    borderWidth: 2,
+    borderColor: '#FACE07',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+
+
+  header: {
+    backgroundColor: '#FACE07',
+    padding: 10,
+    width: '80%',
+  },
+
+
+  textoBotao: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#463901',
+  },
+
 });
