@@ -26,7 +26,3 @@ Primeiro, baixe o zip das pastas 'app-scholar snack' e 'app_scholar_api-derick'.
 
 ## Autor
 Derick Campos Silva
-Aluno do 3 ano Desenvolvimento de Sistemas
-E.E. Professor José Vieira Macedo
-ETEC
-Centro Paula Souza
