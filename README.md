@@ -14,9 +14,9 @@ O projeto consiste na criação de um aplicativo de cadastro, consulta e ediçã
 - React Native;
 - JavaScript;
 - GitHub;
+- XAMPP;
 - MySQL;
-- PHP;
-- CSS.
+- PHP.
 
 ## Estrutura do Projeto
 A pasta principal do aplicativo, sendo a que contêm todo o código do APP Scholar é a pasta `App.js`, nela está todo o código mais recente no momento, onde estão feitos a tela principal do app, o botão de sobre (que tem uma breve descrição do aplicativo e para quê ele serve), esse arquivo está na pasta principal 'app-scholar snack', mais específicamente na pasta 'components' dentro dela. A logo do app (logo.png) está localizado na segunda pasta dentro da principal, sendo ela a pasta 'assets'. A pasta 'app_scholar_api-derick' é onde se encontram as conexões para fazer o cadastro, consulta e edição funcionarem. Além de um arquivo de código que possibilita a conexão do app com o banco de dados na rede localhost. O arquivo 'bd_escola.sql' é o código do banco de dados do app, ele é de extrema importância para que o app funcione corretamente.
