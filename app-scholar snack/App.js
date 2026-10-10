@@ -11,12 +11,12 @@ import {StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Alert, Scrol
 // http://10.0.2.2:3000
 //
 // Celular físico:
-// trocar pelo IP do computador
+// trocar pelo IP do computador.
 // http://192.168.1.10:3000
 //
 // ======================================================
 
-const API_URL = 'http://10.0.2.2:3000';
+const API_URL = 'http://10.0.2.2/api_alunos_php';
 
 
 // Tela inicial da aplicação
@@ -37,6 +37,10 @@ export default function App() {
   const [telefone, setTelefone] = useState('');
 
   const [carregando, setCarregando] = useState(false);
+
+  const [alunos, setAlunos] = useState([]);
+  const [alunoSelecionado, setAlunoSelecionado] = useState(null);
+  const [carregandoLista, setCarregandoLista] = useState(false);
 
 
   // ======================================================
@@ -69,7 +73,7 @@ export default function App() {
 
 
       // Envia os dados para a API
-      const resposta = await fetch(`${API_URL}/api/alunos`, {
+      const resposta = await fetch(`${API_URL}/cadastrar_aluno.php`, {
         method: 'POST',
 
         headers: {
@@ -136,13 +140,82 @@ export default function App() {
 
 
   // ======================================================
-  // TELA HOME
+    // ======================================================
+  // CONSULTAR, SELECIONAR E EDITAR ALUNOS
+  // ======================================================
+
+  const consultarAlunos = async () => {
+    try {
+      setCarregandoLista(true);
+      const resposta = await fetch(`${API_URL}/alunos.php`);
+      const dados = await resposta.json();
+      if (!resposta.ok || !Array.isArray(dados)) {
+        throw new Error(dados.mensagem || 'Não foi possível consultar os alunos.');
+      }
+      setAlunos(dados);
+    } catch (erro) {
+      Alert.alert('Erro', erro.message || 'Não foi possível conectar à API.');
+    } finally {
+      setCarregandoLista(false);
+    }
+  };
+
+  const abrirEdicao = (aluno) => {
+    setAlunoSelecionado(aluno);
+    setNome(aluno.Nome_aluno || '');
+    setDataNascimento(aluno.Data_de_Nascimento || '');
+    setIdRuas(String(aluno.idRuas || ''));
+    setCpf(aluno.CPF || '');
+    setEmail(aluno.Email || '');
+    setTelefone(aluno.Telefone || '');
+    setTelaAtual('Editar_Aluno');
+  };
+
+  const salvarEdicaoAluno = async () => {
+    if (!alunoSelecionado) return;
+    if (!nome || !dataNascimento || !idRuas || !cpf || !email || !telefone) {
+      Alert.alert('Atenção', 'Preencha todos os campos.');
+      return;
+    }
+    try {
+      setCarregando(true);
+      const resposta = await fetch(`${API_URL}/editar_aluno.php`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          idAlunos: alunoSelecionado.idAlunos,
+          Nome_aluno: nome,
+          Data_de_Nascimento: dataNascimento,
+          idRuas: Number(idRuas),
+          CPF: cpf,
+          Email: email,
+          Telefone: telefone,
+        }),
+      });
+      const dados = await resposta.json();
+      if (!resposta.ok || !dados.sucesso) {
+        Alert.alert('Erro', dados.mensagem || 'Não foi possível editar o aluno.');
+        return;
+      }
+      Alert.alert('Sucesso', 'Aluno atualizado com sucesso!');
+      await consultarAlunos();
+      setTelaAtual('Consultar_Alunos');
+    } catch (erro) {
+      Alert.alert('Erro de conexão', 'Não foi possível conectar à API PHP. Confira o XAMPP e o endereço da API.');
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+
+// TELA HOME
   // ======================================================
 
   if (telaAtual === 'Home') {
 
     return (
       <View style={styles.container}>
+        <Image source={require("./assets/logo.png")} style={styles.logo}/>
 
         <Text style={styles.titulo}>
           App Scholar
@@ -231,6 +304,23 @@ export default function App() {
           </Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Avaliações')}
+        >
+          <Text style={styles.textoBotao}>
+          Avaliações
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.botao}
+          onPress={() => setTelaAtual('Cursos')}
+        >
+          <Text style={styles.textoBotao}>
+            Cursos
+          </Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.botao}
@@ -616,7 +706,7 @@ export default function App() {
 
         <TouchableOpacity
           style={styles.botao}
-          onPress={() => setTelaAtual('Consultar_Alunos')}
+          onPress={() => { setTelaAtual('Consultar_Alunos'); consultarAlunos(); }}
         >
           <Text style={styles.textoBotao}>
             Consultar Alunos
@@ -679,7 +769,7 @@ export default function App() {
           placeholder="AAAA-MM-DD"
           value={dataNascimento}
           onChangeText={setDataNascimento}
-          keyboardType="numbers-and-punctuation"
+          keyboardType="numeric"
         />
 
 
@@ -706,7 +796,7 @@ export default function App() {
 
         <TextInput
           style={styles.input}
-          placeholder="Digite o CPF"
+          placeholder="000.000.000-00"
           value={cpf}
           onChangeText={setCpf}
           keyboardType="numeric"
@@ -737,7 +827,7 @@ export default function App() {
 
         <TextInput
           style={styles.input}
-          placeholder="Digite o telefone"
+          placeholder="(00) 00000-0000"
           value={telefone}
           onChangeText={setTelefone}
           keyboardType="phone-pad"
@@ -783,35 +873,80 @@ export default function App() {
   // ======================================================
   // CONSULTAR ALUNOS
   // ======================================================
+
   if (telaAtual === 'Consultar_Alunos') {
-
     return (
-      <View style={styles.container}>
-
-        <Text style={styles.titulo}>
-          Consultar Alunos
-        </Text>
-
-        <Text style={styles.caixa}>
-          A consulta de alunos ainda será conectada a API.
-        </Text>
-
-
-        <TouchableOpacity
-          style={styles.botao2}
-          onPress={() => setTelaAtual('Alunos')}
-        >
-          <Text style={styles.textoBotao}>
-            Voltar
-          </Text>
+      <ScrollView contentContainerStyle={styles.formularioContainer}>
+        <Text style={styles.titulo}>Consultar Alunos</Text>
+        <TouchableOpacity style={styles.botao} onPress={consultarAlunos} disabled={carregandoLista}>
+          <Text style={styles.textoBotao}>{carregandoLista ? 'Carregando...' : 'Atualizar lista'}</Text>
         </TouchableOpacity>
 
-      </View>
+        {alunos.length === 0 && !carregandoLista ? (
+          <Text style={styles.caixa}>Nenhum aluno encontrado. Toque em “Atualizar lista”.</Text>
+        ) : null}
+
+        {alunos.map((aluno) => (
+          <View key={String(aluno.idAlunos)} style={styles.cardAluno}>
+            <Text style={styles.nomeAluno}>{aluno.Nome_aluno}</Text>
+            <Text>ID: {aluno.idAlunos}</Text>
+            <Text>Nascimento: {aluno.Data_de_Nascimento}</Text>
+            <Text>CPF: {aluno.CPF}</Text>
+            <Text>E-mail: {aluno.Email}</Text>
+            <Text>Telefone: {aluno.Telefone}</Text>
+            <Text>Rua: {aluno.Nome_rua} (ID {aluno.idRuas})</Text>
+            <TouchableOpacity style={styles.botao} onPress={() => abrirEdicao(aluno)}>
+              <Text style={styles.textoBotao}>Editar aluno</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+
+        <TouchableOpacity style={styles.botao2} onPress={() => setTelaAtual('Alunos')}>
+          <Text style={styles.textoBotao}>Voltar</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    );
+  }
+
+  // ======================================================
+  // EDITAR ALUNO
+  // ======================================================
+
+  if (telaAtual === 'Editar_Aluno') {
+    return (
+      <ScrollView contentContainerStyle={styles.formularioContainer}>
+        <Text style={styles.titulo}>Editar Aluno</Text>
+
+        <Text style={styles.label}>Nome do aluno</Text>
+        <TextInput style={styles.input} value={nome} onChangeText={setNome} placeholder="Nome completo" />
+
+        <Text style={styles.label}>Data de nascimento (AAAA-MM-DD)</Text>
+        <TextInput style={styles.input} value={dataNascimento} onChangeText={setDataNascimento} placeholder="AAAA-MM-DD" />
+
+        <Text style={styles.label}>ID da rua</Text>
+        <TextInput style={styles.input} value={idRuas} onChangeText={setIdRuas} placeholder="Consulte ruas.php" keyboardType="numeric" />
+
+        <Text style={styles.label}>CPF (11 dígitos)</Text>
+        <TextInput style={styles.input} value={cpf} onChangeText={setCpf} placeholder="Somente números" keyboardType="numeric" />
+
+        <Text style={styles.label}>E-mail</Text>
+        <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="E-mail" keyboardType="email-address" autoCapitalize="none" />
+
+        <Text style={styles.label}>Telefone</Text>
+        <TextInput style={styles.input} value={telefone} onChangeText={setTelefone} placeholder="Telefone" keyboardType="phone-pad" />
+
+        <TouchableOpacity style={styles.botao} onPress={salvarEdicaoAluno} disabled={carregando}>
+          <Text style={styles.textoBotao}>{carregando ? 'Salvando...' : 'Salvar alterações'}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.botao2} onPress={() => setTelaAtual('Consultar_Alunos')}>
+          <Text style={styles.textoBotao}>Cancelar</Text>
+        </TouchableOpacity>
+      </ScrollView>
     );
   }
 
 
-  // ======================================================
   // ESTILIZAÇÃO
   // ======================================================
 
@@ -839,9 +974,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ecf0f1',
+    padding: 16,
+    paddingTop: 36,
+    paddingBottom: 36,
+  },
+
+  pickerContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#ecf0f1',
     padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
   },
 
 
@@ -905,7 +1048,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 13,
     fontSize: 16,
     marginBottom: 10,
   },
@@ -914,9 +1057,9 @@ const styles = StyleSheet.create({
   botao: {
     width: '80%',
     backgroundColor: '#FACE07',
-    padding: 15,
+    padding: 12,
     borderRadius: 10,
-    marginBottom: 15,
+    marginBottom: 14,
     alignItems: 'center',
   },
 
@@ -943,6 +1086,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#463901',
+  },
+
+  cardAluno: {
+    width: '100%',
+    backgroundColor: '#ffffff',
+    padding: 14,
+    borderRadius: 10,
+    marginVertical: 8,
+  },
+
+  nomeAluno: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 6,
   },
 
 });
