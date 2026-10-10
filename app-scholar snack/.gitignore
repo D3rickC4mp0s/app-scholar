@@ -141,3 +141,14 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Arquivos de ambiente com configurações locais
+.env
+.env.*
+
+# Configurações locais do PHP
+api_alunos_php/config.local.php
+
+# Backups e arquivos temporários
+*.bak
+*.tmp
